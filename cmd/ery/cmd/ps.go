@@ -1,12 +1,12 @@
 package cmd
 
 import (
-	"context"
 	"fmt"
 
 	"github.com/spf13/cobra"
 	"google.golang.org/grpc"
 
+	"github.com/srvc/appctx"
 	api_pb "github.com/srvc/ery/api"
 )
 
@@ -15,7 +15,8 @@ func newPsCmd() *cobra.Command {
 		Use:   "ps",
 		Short: "List apps",
 		RunE: func(c *cobra.Command, args []string) error {
-			ctx := context.Background()
+			ctx := appctx.Global()
+
 			conn, err := grpc.DialContext(ctx, "api.ery.local:80", grpc.WithInsecure())
 			if err != nil {
 				return err

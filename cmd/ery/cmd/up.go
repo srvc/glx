@@ -8,8 +8,8 @@ import (
 	"github.com/docker/docker/client"
 	"github.com/izumin5210/clig/pkg/clib"
 	"github.com/spf13/cobra"
+	"github.com/srvc/appctx"
 	"github.com/srvc/ery/cmd/ery/cmd/up"
-	cliutil "github.com/srvc/ery/pkg/util/cli"
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
 
@@ -22,7 +22,9 @@ func newUpCmd() *cobra.Command {
 		Use:   "up",
 		Short: "Up server",
 		Args:  cobra.ExactArgs(1),
-		RunE: cliutil.CobraRunE(func(ctx context.Context, c *cobra.Command, args []string) error {
+		RunE: func(c *cobra.Command, args []string) error {
+			ctx := appctx.Global()
+
 			fs := ery.NewFs()
 			uFs, err := ery.NewUnionFs(fs)
 			if err != nil {
@@ -87,7 +89,7 @@ func newUpCmd() *cobra.Command {
 			wg.Wait()
 
 			return nil
-		}),
+		},
 	}
 
 	return cmd
