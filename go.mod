@@ -10,6 +10,7 @@ require (
 	github.com/docker/distribution v2.7.1+incompatible // indirect
 	github.com/docker/docker v0.7.3-0.20190823211223-71d35adb3fad
 	github.com/docker/go-connections v0.4.0
+	github.com/fatih/color v1.7.0
 	github.com/gogo/protobuf v1.2.1
 	github.com/golang/mock v1.3.1 // indirect
 	github.com/golang/protobuf v1.3.2
@@ -46,6 +47,7 @@ require (
 	golang.org/x/crypto v0.0.0-20190829043050-9756ffdc2472 // indirect
 	golang.org/x/sync v0.0.0-20190423024810-112230192c58
 	golang.org/x/sys v0.0.0-20190830142957-1e83adbbebd0 // indirect
+	golang.org/x/text v0.3.2
 	golang.org/x/tools v0.0.0-20190830223141-573d9926052a
 	google.golang.org/genproto v0.0.0-20190819201941-24fa4b261c55
 	google.golang.org/grpc v1.23.0

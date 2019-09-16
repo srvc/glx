@@ -12,6 +12,7 @@ import (
 
 	"github.com/srvc/ery"
 	api_pb "github.com/srvc/ery/api"
+	"github.com/srvc/ery/pkg/util/prefixer"
 )
 
 func NewLocalRunnerFactory(
@@ -60,8 +61,8 @@ func (r *LocalRunner) Run(ctx context.Context) error {
 		}
 	}
 	cmd.Stdin = r.io.In()
-	cmd.Stdout = r.io.Out()
-	cmd.Stderr = r.io.Err()
+	cmd.Stdout = prefixer.NewWriter(r.io.Out(), r.app.Name, "")
+	cmd.Stderr = prefixer.NewWriter(r.io.Err(), r.app.Name, "")
 	r.log.Info("start")
 	err := cmd.Run()
 	if err != nil {

@@ -24,6 +24,7 @@ import (
 
 	"github.com/srvc/ery"
 	api_pb "github.com/srvc/ery/api"
+	"github.com/srvc/ery/pkg/util/prefixer"
 )
 
 func NewDockerRunnerFactory(
@@ -116,8 +117,8 @@ func (r *DockerRunner) build(ctx context.Context, imageTag string) error {
 	cmd.Env = os.Environ()
 	cmd.Env = append(cmd.Env, "DOCKER_BUILDKIT=1")
 	cmd.Stdin = r.io.In()
-	cmd.Stdout = r.io.Out()
-	cmd.Stderr = r.io.Err()
+	cmd.Stdout = prefixer.NewWriter(r.io.Out(), r.app.Name, "build")
+	cmd.Stderr = prefixer.NewWriter(r.io.Err(), r.app.Name, "build")
 	r.log.Debug("start building docker image", zap.Strings("command", cmd.Args))
 	return cmd.Run()
 }
@@ -275,7 +276,7 @@ func (r *DockerRunner) execCommand(ctx context.Context, containerID string, cmd 
 	}
 	defer attachResp.Close()
 
-	io.Copy(r.io.Out(), attachResp.Reader)
+	io.Copy(prefixer.NewWriter(r.io.Out(), r.app.Name, ""), attachResp.Reader)
 
 	return err
 }
