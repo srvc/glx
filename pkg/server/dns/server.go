@@ -9,7 +9,7 @@ import (
 	"github.com/miekg/dns"
 	"go.uber.org/zap"
 
-	"github.com/srvc/ery/pkg/ery/domain"
+	"github.com/srvc/glx/pkg/glx/domain"
 )
 
 var (

@@ -1,4 +1,4 @@
-module github.com/srvc/ery
+module github.com/srvc/glx
 
 go 1.12
 

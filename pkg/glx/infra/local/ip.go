@@ -9,7 +9,7 @@ import (
 	"sync"
 
 	"github.com/izumin5210/execx"
-	"github.com/srvc/ery/pkg/ery/domain"
+	"github.com/srvc/glx/pkg/glx/domain"
 )
 
 type IPPool struct {

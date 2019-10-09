@@ -10,9 +10,9 @@ import (
 	"github.com/izumin5210/execx"
 	"go.uber.org/zap"
 
-	"github.com/srvc/ery"
-	api_pb "github.com/srvc/ery/api"
-	"github.com/srvc/ery/pkg/util/prefixer"
+	"github.com/srvc/glx"
+	api_pb "github.com/srvc/glx/api"
+	"github.com/srvc/glx/pkg/util/prefixer"
 )
 
 func NewLocalRunnerFactory(
@@ -31,7 +31,7 @@ type LocalRunnerFactory struct {
 	log     *zap.Logger
 }
 
-func (f *LocalRunnerFactory) GetRunner(app *ery.App, appPb *api_pb.App) Runner {
+func (f *LocalRunnerFactory) GetRunner(app *glx.App, appPb *api_pb.App) Runner {
 	return &LocalRunner{
 		LocalRunnerFactory: f,
 		app:                app,
@@ -46,7 +46,7 @@ func (f *LocalRunnerFactory) GetRunner(app *ery.App, appPb *api_pb.App) Runner {
 
 type LocalRunner struct {
 	*LocalRunnerFactory
-	app   *ery.App
+	app   *glx.App
 	appPb *api_pb.App
 	log   *zap.Logger
 }

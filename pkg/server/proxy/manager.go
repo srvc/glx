@@ -9,7 +9,7 @@ import (
 	"go.uber.org/zap"
 	"golang.org/x/sync/errgroup"
 
-	api_pb "github.com/srvc/ery/api"
+	api_pb "github.com/srvc/glx/api"
 )
 
 type Manager interface {

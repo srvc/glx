@@ -1,4 +1,4 @@
-package ery_test
+package glx_test
 
 import (
 	"os"
@@ -7,14 +7,14 @@ import (
 
 	"github.com/google/go-cmp/cmp"
 	"github.com/spf13/afero"
-	"github.com/srvc/ery"
+	"github.com/srvc/glx"
 )
 
 func TestNewConfig(t *testing.T) {
 	yaml1 := `
 <: &accounts-k8s
   name: accounts
-  hostname: accounts.ery.local
+  hostname: accounts.glx.local
   kubernetes:
     context: k8s.srvc.tools
     namespace: accounts
@@ -25,7 +25,7 @@ func TestNewConfig(t *testing.T) {
 
 <: &admin-k8s
   name: admin
-  hostname: admin.ery.local
+  hostname: admin.glx.local
   kubernetes:
     context: k8s.srvc.tools
     namespace: admin
@@ -38,7 +38,7 @@ func TestNewConfig(t *testing.T) {
 	yaml2 := `
 <: &blog-local
   name: blog
-  hostname: blog.ery.local
+  hostname: blog.glx.local
   local:
     port_env:
       PORT: 80
@@ -49,7 +49,7 @@ func TestNewConfig(t *testing.T) {
 	yaml3 := `
 <: &admin-docker
   name: admin
-  hostname: admin.ery.local
+  hostname: admin.glx.local
   docker:
     path: example.com/admin
     build:
@@ -66,7 +66,7 @@ func TestNewConfig(t *testing.T) {
 `
 
 	yaml4 := `
-root: /Users/ery/src
+root: /Users/glx/src
 
 projects:
 - name: blog
@@ -82,72 +82,72 @@ projects:
   - *accounts-k8s
 `
 
-	wantCfg := &ery.Config{
-		Root: "/Users/ery/src",
-		Projects: []*ery.Project{
+	wantCfg := &glx.Config{
+		Root: "/Users/glx/src",
+		Projects: []*glx.Project{
 			{
 				Name: "blog",
-				Apps: []*ery.App{
+				Apps: []*glx.App{
 					{
 						Name:     "blog",
-						Hostname: "blog.ery.local",
-						Local: &ery.LocalApp{
-							PortEnv: map[string]ery.Port{"PORT": ery.Port(80)},
+						Hostname: "blog.glx.local",
+						Local: &glx.LocalApp{
+							PortEnv: map[string]glx.Port{"PORT": glx.Port(80)},
 							Path:    "example.com/blog",
 							Cmd:     []string{"go", "run", "./cmd/server"},
 						},
 					},
 					{
 						Name:     "admin",
-						Hostname: "admin.ery.local",
-						Kubernetes: &ery.KubernetesApp{
+						Hostname: "admin.glx.local",
+						Kubernetes: &glx.KubernetesApp{
 							Context:   "k8s.srvc.tools",
 							Namespace: "admin",
 							Labels:    map[string]string{"role": "web"},
-							Ports:     map[ery.Port]ery.Port{80: 3000},
+							Ports:     map[glx.Port]glx.Port{80: 3000},
 						},
 					},
 					{
 						Name:     "accounts",
-						Hostname: "accounts.ery.local",
-						Kubernetes: &ery.KubernetesApp{
+						Hostname: "accounts.glx.local",
+						Kubernetes: &glx.KubernetesApp{
 							Context:   "k8s.srvc.tools",
 							Namespace: "accounts",
 							Labels:    map[string]string{"role": "api"},
-							Ports:     map[ery.Port]ery.Port{80: 8080},
+							Ports:     map[glx.Port]glx.Port{80: 8080},
 						},
 					},
 				},
 			},
 			{
 				Name: "admin",
-				Apps: []*ery.App{
+				Apps: []*glx.App{
 					{
 						Name:     "blog",
-						Hostname: "blog.ery.local",
-						Local: &ery.LocalApp{
-							PortEnv: map[string]ery.Port{"PORT": ery.Port(80)},
+						Hostname: "blog.glx.local",
+						Local: &glx.LocalApp{
+							PortEnv: map[string]glx.Port{"PORT": glx.Port(80)},
 							Path:    "example.com/blog",
 							Cmd:     []string{"go", "run", "./cmd/server"},
 						},
 					},
 					{
 						Name:     "admin",
-						Hostname: "admin.ery.local",
-						Docker: &ery.DockerApp{
-							Ports: []ery.Port{80},
+						Hostname: "admin.glx.local",
+						Docker: &glx.DockerApp{
+							Ports: []glx.Port{80},
 							Path:  "example.com/admin",
 							Cmd:   []string{"bin/rails", "s"},
 						},
 					},
 					{
 						Name:     "accounts",
-						Hostname: "accounts.ery.local",
-						Kubernetes: &ery.KubernetesApp{
+						Hostname: "accounts.glx.local",
+						Kubernetes: &glx.KubernetesApp{
 							Context:   "k8s.srvc.tools",
 							Namespace: "accounts",
 							Labels:    map[string]string{"role": "api"},
-							Ports:     map[ery.Port]ery.Port{80: 8080},
+							Ports:     map[glx.Port]glx.Port{80: 8080},
 						},
 					},
 				},
@@ -155,46 +155,46 @@ projects:
 		},
 	}
 
-	configDir := filepath.Join(os.Getenv("HOME"), ".config", "ery")
+	configDir := filepath.Join(os.Getenv("HOME"), ".config", "glx")
 
 	cases := []struct {
 		test  string
 		setup func(t *testing.T, fs afero.Fs)
 	}{
 		{
-			test: "with ery.yaml",
+			test: "with glx.yaml",
 			setup: func(t *testing.T, fs afero.Fs) {
-				afero.WriteFile(fs, filepath.Join(configDir, "ery.k8s.yaml"), []byte(yaml1), 0644)
-				afero.WriteFile(fs, filepath.Join(configDir, "ery.local.yaml"), []byte(yaml2), 0644)
-				afero.WriteFile(fs, filepath.Join(configDir, "ery.docker.yaml"), []byte(yaml3), 0644)
-				afero.WriteFile(fs, filepath.Join(configDir, "ery.yaml"), []byte(yaml4), 0644)
+				afero.WriteFile(fs, filepath.Join(configDir, "glx.k8s.yaml"), []byte(yaml1), 0644)
+				afero.WriteFile(fs, filepath.Join(configDir, "glx.local.yaml"), []byte(yaml2), 0644)
+				afero.WriteFile(fs, filepath.Join(configDir, "glx.docker.yaml"), []byte(yaml3), 0644)
+				afero.WriteFile(fs, filepath.Join(configDir, "glx.yaml"), []byte(yaml4), 0644)
 			},
 		},
 		{
-			test: "without ery.yaml",
+			test: "without glx.yaml",
 			setup: func(t *testing.T, fs afero.Fs) {
-				afero.WriteFile(fs, filepath.Join(configDir, "ery.k8s.yaml"), []byte(yaml1), 0644)
-				afero.WriteFile(fs, filepath.Join(configDir, "ery.local.yaml"), []byte(yaml2), 0644)
-				afero.WriteFile(fs, filepath.Join(configDir, "ery.docker.yaml"), []byte(yaml3), 0644)
-				afero.WriteFile(fs, filepath.Join(configDir, "ery.projects.yaml"), []byte(yaml4), 0644)
+				afero.WriteFile(fs, filepath.Join(configDir, "glx.k8s.yaml"), []byte(yaml1), 0644)
+				afero.WriteFile(fs, filepath.Join(configDir, "glx.local.yaml"), []byte(yaml2), 0644)
+				afero.WriteFile(fs, filepath.Join(configDir, "glx.docker.yaml"), []byte(yaml3), 0644)
+				afero.WriteFile(fs, filepath.Join(configDir, "glx.projects.yaml"), []byte(yaml4), 0644)
 			},
 		},
 		{
-			test: "with ery.yml",
+			test: "with glx.yml",
 			setup: func(t *testing.T, fs afero.Fs) {
-				afero.WriteFile(fs, filepath.Join(configDir, "ery.k8s.yml"), []byte(yaml1), 0644)
-				afero.WriteFile(fs, filepath.Join(configDir, "ery.local.yml"), []byte(yaml2), 0644)
-				afero.WriteFile(fs, filepath.Join(configDir, "ery.docker.yml"), []byte(yaml3), 0644)
-				afero.WriteFile(fs, filepath.Join(configDir, "ery.yml"), []byte(yaml4), 0644)
+				afero.WriteFile(fs, filepath.Join(configDir, "glx.k8s.yml"), []byte(yaml1), 0644)
+				afero.WriteFile(fs, filepath.Join(configDir, "glx.local.yml"), []byte(yaml2), 0644)
+				afero.WriteFile(fs, filepath.Join(configDir, "glx.docker.yml"), []byte(yaml3), 0644)
+				afero.WriteFile(fs, filepath.Join(configDir, "glx.yml"), []byte(yaml4), 0644)
 			},
 		},
 		{
-			test: "without ery.yml",
+			test: "without glx.yml",
 			setup: func(t *testing.T, fs afero.Fs) {
-				afero.WriteFile(fs, filepath.Join(configDir, "ery.k8s.yml"), []byte(yaml1), 0644)
-				afero.WriteFile(fs, filepath.Join(configDir, "ery.local.yml"), []byte(yaml2), 0644)
-				afero.WriteFile(fs, filepath.Join(configDir, "ery.docker.yml"), []byte(yaml3), 0644)
-				afero.WriteFile(fs, filepath.Join(configDir, "ery.projects.yml"), []byte(yaml4), 0644)
+				afero.WriteFile(fs, filepath.Join(configDir, "glx.k8s.yml"), []byte(yaml1), 0644)
+				afero.WriteFile(fs, filepath.Join(configDir, "glx.local.yml"), []byte(yaml2), 0644)
+				afero.WriteFile(fs, filepath.Join(configDir, "glx.docker.yml"), []byte(yaml3), 0644)
+				afero.WriteFile(fs, filepath.Join(configDir, "glx.projects.yml"), []byte(yaml4), 0644)
 			},
 		},
 	}
@@ -205,12 +205,12 @@ projects:
 			baseFs := afero.NewMemMapFs()
 			tc.setup(t, baseFs)
 
-			fs, err := ery.NewUnionFs(baseFs)
+			fs, err := glx.NewUnionFs(baseFs)
 			if err != nil {
 				t.Fatalf("unexpected error: %v", err)
 			}
-			viper := ery.NewViper(fs)
-			cfg, err := ery.NewConfig(viper)
+			viper := glx.NewViper(fs)
+			cfg, err := glx.NewConfig(viper)
 			if err != nil {
 				t.Fatalf("unexpected error: %v", err)
 			}

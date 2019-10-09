@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	api_pb "github.com/srvc/ery/api"
+	api_pb "github.com/srvc/glx/api"
 )
 
 func Test_AppServiceServer_ListApps(t *testing.T) {

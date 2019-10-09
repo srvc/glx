@@ -7,7 +7,7 @@ import (
 	"google.golang.org/grpc"
 
 	"github.com/srvc/appctx"
-	api_pb "github.com/srvc/ery/api"
+	api_pb "github.com/srvc/glx/api"
 )
 
 func newPsCmd() *cobra.Command {
@@ -17,7 +17,7 @@ func newPsCmd() *cobra.Command {
 		RunE: func(c *cobra.Command, args []string) error {
 			ctx := appctx.Global()
 
-			conn, err := grpc.DialContext(ctx, "api.ery.local:80", grpc.WithInsecure())
+			conn, err := grpc.DialContext(ctx, "api.glx.local:80", grpc.WithInsecure())
 			if err != nil {
 				return err
 			}

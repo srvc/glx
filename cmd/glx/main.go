@@ -5,7 +5,7 @@ import (
 	"os"
 
 	"github.com/izumin5210/clig/pkg/clib"
-	"github.com/srvc/ery/cmd/ery/cmd"
+	"github.com/srvc/glx/cmd/glx/cmd"
 )
 
 func main() {

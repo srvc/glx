@@ -7,11 +7,11 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/srvc/ery"
+	"github.com/srvc/glx"
 	"go.uber.org/zap"
 )
 
-func NewTCPServer(src, dest *ery.Addr) *TCPServer {
+func NewTCPServer(src, dest *glx.Addr) *TCPServer {
 	return &TCPServer{
 		src:  src,
 		dest: dest,
@@ -20,7 +20,7 @@ func NewTCPServer(src, dest *ery.Addr) *TCPServer {
 }
 
 type TCPServer struct {
-	src, dest *ery.Addr
+	src, dest *glx.Addr
 	log       *zap.Logger
 }
 

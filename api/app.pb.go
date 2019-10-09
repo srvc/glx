@@ -88,7 +88,7 @@ type App struct {
 	// Required.
 	Hostname string `protobuf:"bytes,3,opt,name=hostname,proto3" json:"hostname,omitempty"`
 	// Required.
-	Type App_Type `protobuf:"varint,4,opt,name=type,proto3,enum=srvc.ery.App_Type" json:"type,omitempty"`
+	Type App_Type `protobuf:"varint,4,opt,name=type,proto3,enum=srvc.glx.App_Type" json:"type,omitempty"`
 	// Required.
 	Ports []*App_Port `protobuf:"bytes,5,rep,name=ports,proto3" json:"ports,omitempty"`
 	// Required. Output only.
@@ -167,7 +167,7 @@ func (m *App) GetIp() string {
 
 type App_Port struct {
 	// Required.
-	Network App_Port_Network `protobuf:"varint,1,opt,name=network,proto3,enum=srvc.ery.App_Port_Network" json:"network,omitempty"`
+	Network App_Port_Network `protobuf:"varint,1,opt,name=network,proto3,enum=srvc.glx.App_Port_Network" json:"network,omitempty"`
 	// Required.
 	ExposedPort uint32 `protobuf:"varint,2,opt,name=exposed_port,json=exposedPort,proto3" json:"exposed_port,omitempty"`
 	// Required. Output only.
@@ -459,16 +459,16 @@ func (m *DeleteAppRequest) GetAppId() string {
 }
 
 func init() {
-	proto.RegisterEnum("srvc.ery.App_Type", App_Type_name, App_Type_value)
-	proto.RegisterEnum("srvc.ery.App_Port_Network", App_Port_Network_name, App_Port_Network_value)
-	proto.RegisterType((*App)(nil), "srvc.ery.App")
-	proto.RegisterType((*App_Port)(nil), "srvc.ery.App.Port")
-	proto.RegisterType((*ListAppsRequest)(nil), "srvc.ery.ListAppsRequest")
-	proto.RegisterType((*ListAppsResponse)(nil), "srvc.ery.ListAppsResponse")
-	proto.RegisterType((*GetAppRequest)(nil), "srvc.ery.GetAppRequest")
-	proto.RegisterType((*CreateAppRequest)(nil), "srvc.ery.CreateAppRequest")
-	proto.RegisterType((*UpdateAppRequest)(nil), "srvc.ery.UpdateAppRequest")
-	proto.RegisterType((*DeleteAppRequest)(nil), "srvc.ery.DeleteAppRequest")
+	proto.RegisterEnum("srvc.glx.App_Type", App_Type_name, App_Type_value)
+	proto.RegisterEnum("srvc.glx.App_Port_Network", App_Port_Network_name, App_Port_Network_value)
+	proto.RegisterType((*App)(nil), "srvc.glx.App")
+	proto.RegisterType((*App_Port)(nil), "srvc.glx.App.Port")
+	proto.RegisterType((*ListAppsRequest)(nil), "srvc.glx.ListAppsRequest")
+	proto.RegisterType((*ListAppsResponse)(nil), "srvc.glx.ListAppsResponse")
+	proto.RegisterType((*GetAppRequest)(nil), "srvc.glx.GetAppRequest")
+	proto.RegisterType((*CreateAppRequest)(nil), "srvc.glx.CreateAppRequest")
+	proto.RegisterType((*UpdateAppRequest)(nil), "srvc.glx.UpdateAppRequest")
+	proto.RegisterType((*DeleteAppRequest)(nil), "srvc.glx.DeleteAppRequest")
 }
 
 func init() { proto.RegisterFile("app.proto", fileDescriptor_e0f9056a14b86d47) }
@@ -546,7 +546,7 @@ func NewAppServiceClient(cc *grpc.ClientConn) AppServiceClient {
 
 func (c *appServiceClient) ListApps(ctx context.Context, in *ListAppsRequest, opts ...grpc.CallOption) (*ListAppsResponse, error) {
 	out := new(ListAppsResponse)
-	err := c.cc.Invoke(ctx, "/srvc.ery.AppService/ListApps", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/srvc.glx.AppService/ListApps", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -555,7 +555,7 @@ func (c *appServiceClient) ListApps(ctx context.Context, in *ListAppsRequest, op
 
 func (c *appServiceClient) GetApp(ctx context.Context, in *GetAppRequest, opts ...grpc.CallOption) (*App, error) {
 	out := new(App)
-	err := c.cc.Invoke(ctx, "/srvc.ery.AppService/GetApp", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/srvc.glx.AppService/GetApp", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -564,7 +564,7 @@ func (c *appServiceClient) GetApp(ctx context.Context, in *GetAppRequest, opts .
 
 func (c *appServiceClient) CreateApp(ctx context.Context, in *CreateAppRequest, opts ...grpc.CallOption) (*App, error) {
 	out := new(App)
-	err := c.cc.Invoke(ctx, "/srvc.ery.AppService/CreateApp", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/srvc.glx.AppService/CreateApp", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -573,7 +573,7 @@ func (c *appServiceClient) CreateApp(ctx context.Context, in *CreateAppRequest, 
 
 func (c *appServiceClient) UpdateApp(ctx context.Context, in *UpdateAppRequest, opts ...grpc.CallOption) (*App, error) {
 	out := new(App)
-	err := c.cc.Invoke(ctx, "/srvc.ery.AppService/UpdateApp", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/srvc.glx.AppService/UpdateApp", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -582,7 +582,7 @@ func (c *appServiceClient) UpdateApp(ctx context.Context, in *UpdateAppRequest, 
 
 func (c *appServiceClient) DeleteApp(ctx context.Context, in *DeleteAppRequest, opts ...grpc.CallOption) (*empty.Empty, error) {
 	out := new(empty.Empty)
-	err := c.cc.Invoke(ctx, "/srvc.ery.AppService/DeleteApp", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/srvc.glx.AppService/DeleteApp", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -612,7 +612,7 @@ func _AppService_ListApps_Handler(srv interface{}, ctx context.Context, dec func
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/srvc.ery.AppService/ListApps",
+		FullMethod: "/srvc.glx.AppService/ListApps",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(AppServiceServer).ListApps(ctx, req.(*ListAppsRequest))
@@ -630,7 +630,7 @@ func _AppService_GetApp_Handler(srv interface{}, ctx context.Context, dec func(i
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/srvc.ery.AppService/GetApp",
+		FullMethod: "/srvc.glx.AppService/GetApp",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(AppServiceServer).GetApp(ctx, req.(*GetAppRequest))
@@ -648,7 +648,7 @@ func _AppService_CreateApp_Handler(srv interface{}, ctx context.Context, dec fun
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/srvc.ery.AppService/CreateApp",
+		FullMethod: "/srvc.glx.AppService/CreateApp",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(AppServiceServer).CreateApp(ctx, req.(*CreateAppRequest))
@@ -666,7 +666,7 @@ func _AppService_UpdateApp_Handler(srv interface{}, ctx context.Context, dec fun
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/srvc.ery.AppService/UpdateApp",
+		FullMethod: "/srvc.glx.AppService/UpdateApp",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(AppServiceServer).UpdateApp(ctx, req.(*UpdateAppRequest))
@@ -684,7 +684,7 @@ func _AppService_DeleteApp_Handler(srv interface{}, ctx context.Context, dec fun
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/srvc.ery.AppService/DeleteApp",
+		FullMethod: "/srvc.glx.AppService/DeleteApp",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(AppServiceServer).DeleteApp(ctx, req.(*DeleteAppRequest))
@@ -693,7 +693,7 @@ func _AppService_DeleteApp_Handler(srv interface{}, ctx context.Context, dec fun
 }
 
 var _AppService_serviceDesc = grpc.ServiceDesc{
-	ServiceName: "srvc.ery.AppService",
+	ServiceName: "srvc.glx.AppService",
 	HandlerType: (*AppServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{

@@ -22,7 +22,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/eryListAppsResponse"
+              "$ref": "#/definitions/glxListAppsResponse"
             }
           }
         },
@@ -36,7 +36,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/eryApp"
+              "$ref": "#/definitions/glxApp"
             }
           }
         },
@@ -46,7 +46,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/eryApp"
+              "$ref": "#/definitions/glxApp"
             }
           }
         ],
@@ -62,7 +62,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/eryApp"
+              "$ref": "#/definitions/glxApp"
             }
           }
         },
@@ -79,7 +79,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/eryApp"
+              "$ref": "#/definitions/glxApp"
             }
           }
         ],
@@ -95,7 +95,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/eryApp"
+              "$ref": "#/definitions/glxApp"
             }
           }
         },
@@ -168,7 +168,7 @@
       ],
       "default": "TCP"
     },
-    "eryApp": {
+    "glxApp": {
       "type": "object",
       "properties": {
         "app_id": {
@@ -185,7 +185,7 @@
           "description": "Required."
         },
         "type": {
-          "$ref": "#/definitions/eryAppType",
+          "$ref": "#/definitions/glxAppType",
           "description": "Required."
         },
         "ports": {
@@ -202,7 +202,7 @@
         }
       }
     },
-    "eryAppType": {
+    "glxAppType": {
       "type": "string",
       "enum": [
         "TYPE_UNSPECIFIED",
@@ -212,13 +212,13 @@
       ],
       "default": "TYPE_UNSPECIFIED"
     },
-    "eryListAppsResponse": {
+    "glxListAppsResponse": {
       "type": "object",
       "properties": {
         "apps": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/eryApp"
+            "$ref": "#/definitions/glxApp"
           }
         }
       }

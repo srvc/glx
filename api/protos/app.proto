@@ -1,8 +1,8 @@
 syntax = "proto3";
 
-package srvc.ery;
+package srvc.glx;
 
-option go_package = "github.com/srvc/ery/api;api_pb";
+option go_package = "github.com/srvc/glx/api;api_pb";
 
 import "google/api/annotations.proto";
 import "google/protobuf/empty.proto";

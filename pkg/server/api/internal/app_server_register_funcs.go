@@ -8,7 +8,7 @@ import (
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 	"google.golang.org/grpc"
 
-	api_pb "github.com/srvc/ery/api"
+	api_pb "github.com/srvc/glx/api"
 )
 
 // RegisterWithServer implements grapiserver.Server.RegisterWithServer.

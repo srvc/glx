@@ -7,8 +7,8 @@ import (
 
 	"github.com/izumin5210/clig/pkg/clib"
 	"github.com/spf13/cobra"
-	"github.com/srvc/ery"
-	"github.com/srvc/ery/pkg/server/proxy"
+	"github.com/srvc/glx"
+	"github.com/srvc/glx/pkg/server/proxy"
 	"go.uber.org/zap"
 )
 
@@ -27,12 +27,12 @@ func run() error {
 
 func newCommand(io clib.IO) *cobra.Command {
 	cfg := struct {
-		Src, Dest *ery.Addr
-		Network   ery.Network
+		Src, Dest *glx.Addr
+		Network   glx.Network
 	}{
-		Src:     &ery.Addr{Port: 80},
-		Dest:    &ery.Addr{Port: 8080},
-		Network: ery.NetworkTCP,
+		Src:     &glx.Addr{Port: 80},
+		Dest:    &glx.Addr{Port: 8080},
+		Network: glx.NetworkTCP,
 	}
 
 	cmd := &cobra.Command{
@@ -44,9 +44,9 @@ func newCommand(io clib.IO) *cobra.Command {
 			}
 
 			switch cfg.Network {
-			case ery.NetworkTCP:
+			case glx.NetworkTCP:
 				server = proxy.NewTCPServer(cfg.Src, cfg.Dest)
-			case ery.NetworkUDP:
+			case glx.NetworkUDP:
 			default:
 				panic("unreachable")
 			}

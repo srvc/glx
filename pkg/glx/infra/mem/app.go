@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"sync"
 
-	api_pb "github.com/srvc/ery/api"
-	"github.com/srvc/ery/pkg/ery/domain"
+	api_pb "github.com/srvc/glx/api"
+	"github.com/srvc/glx/pkg/glx/domain"
 	"go.uber.org/zap"
 )
 

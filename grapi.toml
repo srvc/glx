@@ -1,4 +1,4 @@
-package = "srvc.ery"
+package = "srvc.glx"
 
 [grapi]
 server_dir = "./pkg/server/api/internal"

@@ -6,11 +6,11 @@ import (
 	"github.com/srvc/appctx"
 	"golang.org/x/sync/errgroup"
 
-	"github.com/srvc/ery/pkg/ery/infra/local"
-	"github.com/srvc/ery/pkg/ery/infra/mem"
-	"github.com/srvc/ery/pkg/server/api"
-	"github.com/srvc/ery/pkg/server/dns"
-	"github.com/srvc/ery/pkg/server/proxy"
+	"github.com/srvc/glx/pkg/glx/infra/local"
+	"github.com/srvc/glx/pkg/glx/infra/mem"
+	"github.com/srvc/glx/pkg/server/api"
+	"github.com/srvc/glx/pkg/server/dns"
+	"github.com/srvc/glx/pkg/server/proxy"
 )
 
 func newStartCmd() *cobra.Command {

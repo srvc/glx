@@ -1,4 +1,4 @@
-package ery
+package glx
 
 import (
 	"fmt"

@@ -57,7 +57,7 @@ func newDaemonCmd() *cobra.Command {
 			SilenceErrors: true,
 			SilenceUsage:  true,
 			RunE: func(cmd *cobra.Command, _ []string) error {
-				d, err := daemon.New("ery", "Discover services in local")
+				d, err := daemon.New("glx", "Discover services in local")
 				if err != nil {
 					log.Error("failed to init daemon", zap.Error(err))
 					return err

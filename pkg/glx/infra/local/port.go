@@ -4,9 +4,9 @@ import (
 	"context"
 	"sync"
 
-	"github.com/srvc/ery"
-	"github.com/srvc/ery/pkg/ery/domain"
-	netutil "github.com/srvc/ery/pkg/util/net"
+	"github.com/srvc/glx"
+	"github.com/srvc/glx/pkg/glx/domain"
+	netutil "github.com/srvc/glx/pkg/util/net"
 )
 
 type PortPool struct {
@@ -19,14 +19,14 @@ func NewPortPool() *PortPool {
 	return &PortPool{}
 }
 
-func (p *PortPool) Get(ctx context.Context) (ery.Port, error) {
+func (p *PortPool) Get(ctx context.Context) (glx.Port, error) {
 	p.m.Lock()
 	defer p.m.Unlock()
 
 	port, err := netutil.GetFreePort()
 	if err != nil {
-		return ery.Port(0), err
+		return glx.Port(0), err
 	}
 
-	return ery.Port(port), nil
+	return glx.Port(port), nil
 }

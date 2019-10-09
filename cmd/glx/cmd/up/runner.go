@@ -6,8 +6,8 @@ import (
 
 	"go.uber.org/zap"
 
-	"github.com/srvc/ery"
-	api_pb "github.com/srvc/ery/api"
+	"github.com/srvc/glx"
+	api_pb "github.com/srvc/glx/api"
 )
 
 type Runner interface {
@@ -15,7 +15,7 @@ type Runner interface {
 }
 
 type Factory interface {
-	GetRunner(app *ery.App, appPb *api_pb.App) Runner
+	GetRunner(app *glx.App, appPb *api_pb.App) Runner
 }
 
 func New(
@@ -37,7 +37,7 @@ type RunnerFacade struct {
 	log           *zap.Logger
 }
 
-func (r *RunnerFacade) Run(ctx context.Context, app *ery.App) error {
+func (r *RunnerFacade) Run(ctx context.Context, app *glx.App) error {
 	log := r.log.With(zap.String("app_name", app.Name))
 
 	appPb, err := r.appAPI.CreateApp(ctx, &api_pb.CreateAppRequest{App: app.Pb()})

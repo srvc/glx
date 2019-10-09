@@ -8,9 +8,9 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	api_pb "github.com/srvc/ery/api"
-	"github.com/srvc/ery/pkg/ery/domain"
-	"github.com/srvc/ery/pkg/server/proxy"
+	api_pb "github.com/srvc/glx/api"
+	"github.com/srvc/glx/pkg/glx/domain"
+	"github.com/srvc/glx/pkg/server/proxy"
 )
 
 // AppServiceServer is a composite interface of api_pb.AppServiceServer and grapiserver.Server.

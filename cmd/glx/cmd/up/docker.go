@@ -22,9 +22,9 @@ import (
 	"go.uber.org/zap"
 	"golang.org/x/sync/errgroup"
 
-	"github.com/srvc/ery"
-	api_pb "github.com/srvc/ery/api"
-	"github.com/srvc/ery/pkg/util/prefixer"
+	"github.com/srvc/glx"
+	api_pb "github.com/srvc/glx/api"
+	"github.com/srvc/glx/pkg/util/prefixer"
 )
 
 func NewDockerRunnerFactory(
@@ -45,7 +45,7 @@ type DockerRunnerFactory struct {
 	docker  *client.Client
 }
 
-func (f *DockerRunnerFactory) GetRunner(app *ery.App, appPb *api_pb.App) Runner {
+func (f *DockerRunnerFactory) GetRunner(app *glx.App, appPb *api_pb.App) Runner {
 	return &DockerRunner{
 		DockerRunnerFactory: f,
 		app:                 app,
@@ -60,13 +60,13 @@ func (f *DockerRunnerFactory) GetRunner(app *ery.App, appPb *api_pb.App) Runner 
 
 type DockerRunner struct {
 	*DockerRunnerFactory
-	app   *ery.App
+	app   *glx.App
 	appPb *api_pb.App
 	log   *zap.Logger
 }
 
 func (r *DockerRunner) Run(ctx context.Context) error {
-	imageTag := "ery--" + r.app.Name
+	imageTag := "glx--" + r.app.Name
 
 	err := r.build(ctx, imageTag)
 	if err != nil {
@@ -145,7 +145,7 @@ func (r *DockerRunner) createVolume(ctx context.Context, spec string) (*mount.Mo
 	}
 	switch vol.Type {
 	case "volume":
-		volName := strings.Join([]string{"ery", r.app.Name, vol.Source}, "--")
+		volName := strings.Join([]string{"glx", r.app.Name, vol.Source}, "--")
 		_, err := r.docker.VolumeInspect(ctx, volName)
 		if client.IsErrNotFound(err) {
 			_, err := r.docker.VolumeCreate(ctx, volume.VolumeCreateBody{
@@ -221,12 +221,12 @@ func (r *DockerRunner) createContainer(ctx context.Context, imageTag string, mou
 		Image:        imageTag,
 		ExposedPorts: nat.PortSet{},
 		Labels: map[string]string{
-			"ery-app-id":   r.appPb.GetAppId(),
-			"ery-app-name": r.appPb.GetName(),
+			"glx-app-id":   r.appPb.GetAppId(),
+			"glx-app-name": r.appPb.GetName(),
 		},
 	}
 	hostCfg := &container.HostConfig{
-		NetworkMode:  container.NetworkMode("srvc/ery"),
+		NetworkMode:  container.NetworkMode("srvc/glx"),
 		PortBindings: nat.PortMap{},
 		AutoRemove:   true,
 	}

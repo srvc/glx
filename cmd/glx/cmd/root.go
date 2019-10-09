@@ -7,7 +7,7 @@ import (
 
 func New(io clib.IO) *cobra.Command {
 	cmd := &cobra.Command{
-		Use: "ery",
+		Use: "glx",
 		RunE: func(c *cobra.Command, args []string) error {
 			return nil
 		},

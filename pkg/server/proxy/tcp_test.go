@@ -11,9 +11,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/srvc/ery"
-	"github.com/srvc/ery/pkg/server/proxy"
-	netutil "github.com/srvc/ery/pkg/util/net"
+	"github.com/srvc/glx"
+	"github.com/srvc/glx/pkg/server/proxy"
+	netutil "github.com/srvc/glx/pkg/util/net"
 )
 
 func TestTCPServer(t *testing.T) {
@@ -35,8 +35,8 @@ func TestTCPServer(t *testing.T) {
 	}
 
 	proxy := proxy.NewTCPServer(
-		&ery.Addr{IP: net.ParseIP("127.0.0.1"), Port: ery.Port(port)},
-		&ery.Addr{IP: net.ParseIP("127.0.0.1"), Port: ery.Port(svr.Listener.Addr().(*net.TCPAddr).Port)},
+		&glx.Addr{IP: net.ParseIP("127.0.0.1"), Port: glx.Port(port)},
+		&glx.Addr{IP: net.ParseIP("127.0.0.1"), Port: glx.Port(svr.Listener.Addr().(*net.TCPAddr).Port)},
 	)
 
 	var wg sync.WaitGroup

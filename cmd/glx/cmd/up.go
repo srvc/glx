@@ -9,12 +9,12 @@ import (
 	"github.com/izumin5210/clig/pkg/clib"
 	"github.com/spf13/cobra"
 	"github.com/srvc/appctx"
-	"github.com/srvc/ery/cmd/ery/cmd/up"
+	"github.com/srvc/glx/cmd/glx/cmd/up"
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
 
-	"github.com/srvc/ery"
-	api_pb "github.com/srvc/ery/api"
+	"github.com/srvc/glx"
+	api_pb "github.com/srvc/glx/api"
 )
 
 func newUpCmd() *cobra.Command {
@@ -25,18 +25,18 @@ func newUpCmd() *cobra.Command {
 		RunE: func(c *cobra.Command, args []string) error {
 			ctx := appctx.Global()
 
-			fs := ery.NewFs()
-			uFs, err := ery.NewUnionFs(fs)
+			fs := glx.NewFs()
+			uFs, err := glx.NewUnionFs(fs)
 			if err != nil {
 				return err
 			}
-			viper := ery.NewViper(uFs)
-			cfg, err := ery.NewConfig(viper)
+			viper := glx.NewViper(uFs)
+			cfg, err := glx.NewConfig(viper)
 			if err != nil {
 				return err
 			}
 
-			conn, err := grpc.DialContext(ctx, "api.ery.local:80", grpc.WithInsecure())
+			conn, err := grpc.DialContext(ctx, "api.glx.local:80", grpc.WithInsecure())
 			if err != nil {
 				return err
 			}

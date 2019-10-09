@@ -1,4 +1,4 @@
-package ery
+package glx
 
 import (
 	"bytes"
@@ -9,7 +9,7 @@ import (
 	"github.com/spf13/afero"
 	"github.com/spf13/viper"
 
-	api_pb "github.com/srvc/ery/api"
+	api_pb "github.com/srvc/glx/api"
 )
 
 type Config struct {
@@ -99,13 +99,13 @@ func (c *Config) FindProject(name string) *Project {
 	return nil
 }
 
-var configDir = filepath.Join(os.Getenv("HOME"), ".config", "ery")
+var configDir = filepath.Join(os.Getenv("HOME"), ".config", "glx")
 
 func NewViper(fs afero.Fs) *viper.Viper {
 	v := viper.New()
 	v.SetFs(fs)
 	v.AddConfigPath(configDir)
-	v.SetConfigName("ery")
+	v.SetConfigName("glx")
 	return v
 }
 
@@ -120,7 +120,7 @@ type UnionFS struct {
 func (fs *UnionFS) MergeConfigFiles() error {
 	var matches []string
 	for _, ext := range []string{"yaml", "yml"} {
-		resp, err := afero.Glob(fs, filepath.Join(configDir, "ery.*."+ext))
+		resp, err := afero.Glob(fs, filepath.Join(configDir, "glx.*."+ext))
 		if err != nil {
 			return err
 		}
@@ -131,9 +131,9 @@ func (fs *UnionFS) MergeConfigFiles() error {
 		return nil
 	}
 
-	path := filepath.Join(configDir, "ery.yml")
+	path := filepath.Join(configDir, "glx.yml")
 	if ok, _ := afero.Exists(fs, path); !ok {
-		path = filepath.Join(configDir, "ery.yaml")
+		path = filepath.Join(configDir, "glx.yaml")
 	}
 	out, err := fs.OpenFile(path, os.O_RDWR, 0644)
 	buf := new(bytes.Buffer)

@@ -3,7 +3,7 @@ package domain
 import (
 	"context"
 
-	api_pb "github.com/srvc/ery/api"
+	api_pb "github.com/srvc/glx/api"
 )
 
 type AppRepository interface {

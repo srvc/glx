@@ -4,7 +4,7 @@ import (
 	"context"
 	"net"
 
-	"github.com/srvc/ery"
+	"github.com/srvc/glx"
 )
 
 type IPPool interface {
@@ -12,5 +12,5 @@ type IPPool interface {
 }
 
 type PortPool interface {
-	Get(context.Context) (ery.Port, error)
+	Get(context.Context) (glx.Port, error)
 }

@@ -14,8 +14,8 @@ import (
 	"go.uber.org/zap"
 	"golang.org/x/sync/errgroup"
 
-	api_pb "github.com/srvc/ery/api"
-	logutil "github.com/srvc/ery/pkg/util/log"
+	api_pb "github.com/srvc/glx/api"
+	logutil "github.com/srvc/glx/pkg/util/log"
 )
 
 type DockerServer struct {
@@ -36,7 +36,7 @@ func NewDockerServer(
 }
 
 func (s *DockerServer) Serve(ctx context.Context) error {
-	// TODO: pull srvc/ery-proxy
+	// TODO: pull srvc/glx-proxy
 	// TODO: create network
 
 	cfg := &container.Config{
@@ -45,15 +45,15 @@ func (s *DockerServer) Serve(ctx context.Context) error {
 		AttachStdout: true,
 		AttachStderr: true,
 		Cmd:          []string{"tail", "-f", "/dev/null"},
-		Image:        "srvc/ery-proxy",
+		Image:        "srvc/glx-proxy",
 		ExposedPorts: nat.PortSet{},
 		Labels: map[string]string{
-			"ery-app-id":   s.app.GetAppId(),
-			"ery-app-name": s.app.GetName(),
+			"glx-app-id":   s.app.GetAppId(),
+			"glx-app-name": s.app.GetName(),
 		},
 	}
 	hostCfg := &container.HostConfig{
-		NetworkMode:  container.NetworkMode("srvc/ery"),
+		NetworkMode:  container.NetworkMode("srvc/glx"),
 		PortBindings: nat.PortMap{},
 		AutoRemove:   true,
 	}
@@ -73,7 +73,7 @@ func (s *DockerServer) Serve(ctx context.Context) error {
 		return err
 	}
 	containerID := resp.ID
-	s.log.Debug("ery-proxy container has started", zap.String("container_id", containerID))
+	s.log.Debug("glx-proxy container has started", zap.String("container_id", containerID))
 
 	err = s.client.ContainerStart(ctx, containerID, types.ContainerStartOptions{})
 	if err != nil {
@@ -86,7 +86,7 @@ func (s *DockerServer) Serve(ctx context.Context) error {
 		p := p
 		eg.Go(func() error {
 			cmd := []string{
-				"ery-proxy",
+				"glx-proxy",
 				"--network", p.GetNetwork().String(),
 				"--src-addr", fmt.Sprintf(":%d", p.GetExposedPort()),
 				"--dest-addr", fmt.Sprintf("host.docker.internal:%d", p.GetInternalPort()),
