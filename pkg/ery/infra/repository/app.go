@@ -14,18 +14,17 @@ import (
 
 type App interface {
 	List(context.Context) ([]*ery_pb.App, error)
-	GetByHostname(context.Context, string) (*ery_pb.App, error)
+	Get(context.Context, string) (*ery_pb.App, error)
 	Create(context.Context, *ery_pb.App) error
 	Delete(context.Context, string) error
 }
 
 type appImpl struct {
 	sync.Mutex
-	m          sync.Map
-	byHostname sync.Map
-	ipPool     local.IPPool
-	portPool   local.PortPool
-	log        *zap.Logger
+	m        sync.Map
+	ipPool   local.IPPool
+	portPool local.PortPool
+	log      *zap.Logger
 }
 
 func NewApp(
@@ -53,20 +52,16 @@ func (r *appImpl) List(context.Context) ([]*ery_pb.App, error) {
 	return apps, nil
 }
 
-func (r *appImpl) GetByHostname(_ context.Context, hostname string) (*ery_pb.App, error) {
+func (r *appImpl) Get(_ context.Context, id string) (*ery_pb.App, error) {
 	r.Lock()
 	defer r.Unlock()
 
-	v, ok := r.byHostname.Load(hostname)
-	if ok {
-		v, ok := r.m.Load(v.(string))
-		if ok {
-			if app, ok := v.(*ery_pb.App); ok {
-				return app, nil
-			}
-		}
+	v, ok := r.m.Load(id)
+	if !ok {
+		return nil, fmt.Errorf("%s is not found", id)
 	}
-	return nil, fmt.Errorf("%s is not found", hostname)
+
+	return v.(*ery_pb.App), nil
 }
 
 func (r *appImpl) Create(ctx context.Context, app *ery_pb.App) error {
@@ -97,7 +92,6 @@ func (r *appImpl) Create(ctx context.Context, app *ery_pb.App) error {
 		}
 	}
 	r.m.Store(app.GetAppId(), app)
-	r.byHostname.Store(app.GetHostname(), app.GetAppId())
 
 	r.log.Debug("registered a new app", zap.Any("app", app))
 
@@ -108,11 +102,10 @@ func (r *appImpl) Delete(_ context.Context, id string) error {
 	r.Lock()
 	defer r.Unlock()
 
-	v, ok := r.m.Load(id)
+	_, ok := r.m.Load(id)
 	if !ok {
 		return fmt.Errorf("%s is not found", id)
 	}
 	r.m.Delete(id)
-	r.byHostname.Delete(v.(*ery_pb.App).GetHostname())
 	return nil
 }
