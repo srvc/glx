@@ -55,62 +55,7 @@
         ]
       }
     },
-    "/apps/{app.app_id}": {
-      "patch": {
-        "operationId": "UpdateApp",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/eryApp"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "app.app_id",
-            "description": "Output only.",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/eryApp"
-            }
-          }
-        ],
-        "tags": [
-          "AppService"
-        ]
-      }
-    },
     "/apps/{app_id}": {
-      "get": {
-        "operationId": "GetApp",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/eryApp"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "app_id",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "tags": [
-          "AppService"
-        ]
-      },
       "delete": {
         "operationId": "DeleteApp",
         "responses": {

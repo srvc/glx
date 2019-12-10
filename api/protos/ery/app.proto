@@ -13,20 +13,9 @@ service AppService {
       get: "/apps"
     };
   }
-  rpc GetApp (GetAppRequest) returns (App) {
-    option (google.api.http) = {
-      get: "/apps/{app_id}"
-    };
-  }
   rpc CreateApp (CreateAppRequest) returns (App) {
     option (google.api.http) = {
       post: "/apps"
-      body: "app"
-    };
-  }
-  rpc UpdateApp (UpdateAppRequest) returns (App) {
-    option (google.api.http) = {
-      patch: "/apps/{app.app_id}"
       body: "app"
     };
   }
