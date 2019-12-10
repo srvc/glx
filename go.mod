@@ -40,6 +40,7 @@ require (
 	github.com/spf13/viper v1.4.0
 	github.com/srvc/appctx v0.1.0
 	github.com/takama/daemon v0.11.0
+	github.com/txn2/txeh v1.3.0
 	github.com/xeipuuv/gojsonpointer v0.0.0-20190905194746-02993c407bfb // indirect
 	github.com/xeipuuv/gojsonreference v0.0.0-20180127040603-bd5ef7bd5415 // indirect
 	github.com/xeipuuv/gojsonschema v0.0.0-20170528113821-0c8571ac0ce1 // indirect
