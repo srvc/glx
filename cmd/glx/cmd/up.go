@@ -10,11 +10,12 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/srvc/appctx"
 	"github.com/srvc/glx/cmd/glx/cmd/up"
+	"github.com/srvc/glx/pkg/ery"
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
 
 	"github.com/srvc/glx"
-	api_pb "github.com/srvc/glx/api"
+	ery_pb "github.com/srvc/glx/api/ery"
 )
 
 func newUpCmd() *cobra.Command {
@@ -36,11 +37,11 @@ func newUpCmd() *cobra.Command {
 				return err
 			}
 
-			conn, err := grpc.DialContext(ctx, "api.glx.local:80", grpc.WithInsecure())
+			conn, err := grpc.DialContext(ctx, ery.Hostname, grpc.WithInsecure())
 			if err != nil {
 				return err
 			}
-			appAPI := api_pb.NewAppServiceClient(conn)
+			appAPI := ery_pb.NewAppServiceClient(conn)
 
 			dockerClient, err := client.NewClientWithOpts(client.FromEnv, client.WithAPIVersionNegotiation())
 			if err != nil {

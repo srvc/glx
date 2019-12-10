@@ -9,7 +9,7 @@ import (
 	"github.com/spf13/afero"
 	"github.com/spf13/viper"
 
-	api_pb "github.com/srvc/glx/api"
+	ery_pb "github.com/srvc/glx/api/ery"
 )
 
 type Config struct {
@@ -31,33 +31,28 @@ type App struct {
 	Kubernetes *KubernetesApp
 }
 
-func (a *App) Pb() *api_pb.App {
-	pb := &api_pb.App{
+func (a *App) Pb() *ery_pb.App {
+	pb := &ery_pb.App{
 		Name:     a.Name,
 		Hostname: a.Hostname,
 	}
 
 	switch {
 	case a.Local != nil:
-		pb.Type = api_pb.App_TYPE_LOCAL
-		for name, port := range a.Local.PortEnv {
-			pb.Ports = append(pb.Ports, &api_pb.App_Port{
-				Network:     api_pb.App_Port_TCP, // TODO
-				ExposedPort: uint32(port),
-				Env:         name,
+		for _, port := range a.Local.PortEnv {
+			pb.Ports = append(pb.Ports, &ery_pb.App_Port{
+				Network:       ery_pb.App_Port_TCP, // TODO
+				RequestedPort: uint32(port),
 			})
 		}
 	case a.Docker != nil:
-		pb.Type = api_pb.App_TYPE_DOCKER
-		for name, port := range a.Docker.Run.PortEnv {
-			pb.Ports = append(pb.Ports, &api_pb.App_Port{
-				Network:     api_pb.App_Port_TCP, // TODO
-				ExposedPort: uint32(port),
-				Env:         name,
+		for _, port := range a.Docker.Run.PortEnv {
+			pb.Ports = append(pb.Ports, &ery_pb.App_Port{
+				Network:       ery_pb.App_Port_TCP, // TODO
+				RequestedPort: uint32(port),
 			})
 		}
 	case a.Kubernetes != nil:
-		pb.Type = api_pb.App_TYPE_KUBERNETES
 		// TODO: not yet supported
 	}
 
@@ -160,7 +155,6 @@ func (fs *UnionFS) MergeConfigFiles() error {
 		return err
 	}
 	defer out.Close()
-
 	for _, match := range matches {
 		in, err := fs.Open(match)
 		if err != nil {

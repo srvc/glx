@@ -7,7 +7,7 @@ import (
 	"go.uber.org/zap"
 
 	"github.com/srvc/glx"
-	api_pb "github.com/srvc/glx/api"
+	ery_pb "github.com/srvc/glx/api/ery"
 )
 
 type Runner interface {
@@ -15,11 +15,11 @@ type Runner interface {
 }
 
 type Factory interface {
-	GetRunner(app *glx.App, appPb *api_pb.App) Runner
+	GetRunner(app *glx.App, appPb *ery_pb.App) Runner
 }
 
 func New(
-	appAPI api_pb.AppServiceClient,
+	appAPI ery_pb.AppServiceClient,
 	local *LocalRunnerFactory,
 	docker *DockerRunnerFactory,
 ) *RunnerFacade {
@@ -32,7 +32,7 @@ func New(
 }
 
 type RunnerFacade struct {
-	appAPI        api_pb.AppServiceClient
+	appAPI        ery_pb.AppServiceClient
 	local, docker Factory
 	log           *zap.Logger
 }
@@ -40,7 +40,7 @@ type RunnerFacade struct {
 func (r *RunnerFacade) Run(ctx context.Context, app *glx.App) error {
 	log := r.log.With(zap.String("app_name", app.Name))
 
-	appPb, err := r.appAPI.CreateApp(ctx, &api_pb.CreateAppRequest{App: app.Pb()})
+	appPb, err := r.appAPI.CreateApp(ctx, &ery_pb.CreateAppRequest{App: app.Pb()})
 	if err != nil {
 		r.log.Error("failed to register app", zap.Error(err))
 		return err
@@ -50,7 +50,7 @@ func (r *RunnerFacade) Run(ctx context.Context, app *glx.App) error {
 	log.Debug("a new app is registered")
 
 	defer func() {
-		_, err = r.appAPI.DeleteApp(context.Background(), &api_pb.DeleteAppRequest{AppId: appPb.GetAppId()})
+		_, err = r.appAPI.DeleteApp(context.Background(), &ery_pb.DeleteAppRequest{AppId: appPb.GetAppId()})
 		if err != nil {
 			log.Error("failed to delete app", zap.Error(err))
 		}

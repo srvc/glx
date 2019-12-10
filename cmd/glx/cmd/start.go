@@ -1,16 +1,10 @@
 package cmd
 
 import (
-	"github.com/docker/docker/client"
 	"github.com/spf13/cobra"
 	"github.com/srvc/appctx"
-	"golang.org/x/sync/errgroup"
 
-	"github.com/srvc/glx/pkg/glx/infra/local"
-	"github.com/srvc/glx/pkg/glx/infra/mem"
-	"github.com/srvc/glx/pkg/server/api"
-	"github.com/srvc/glx/pkg/server/dns"
-	"github.com/srvc/glx/pkg/server/proxy"
+	"github.com/srvc/glx/pkg/ery"
 )
 
 func newStartCmd() *cobra.Command {
@@ -20,26 +14,13 @@ func newStartCmd() *cobra.Command {
 		RunE: func(c *cobra.Command, args []string) error {
 			ctx := appctx.Global()
 
-			ipPool, err := local.NewIPPool()
+			ery, closeFunc, err := ery.New(ctx)
 			if err != nil {
 				return err
 			}
-			portPool := local.NewPortPool()
-			appRepo := mem.NewAppRepository(ipPool, portPool)
-			dockerClient, err := client.NewClientWithOpts(client.FromEnv, client.WithAPIVersionNegotiation())
-			if err != nil {
-				return err
-			}
-			proxies := proxy.NewManager(dockerClient)
-			dns := dns.NewServer(appRepo)
-			api := api.NewServer(appRepo, proxies)
+			defer closeFunc()
 
-			eg, ctx := errgroup.WithContext(ctx)
-			eg.Go(func() error { return proxies.Serve(ctx) })
-			eg.Go(func() error { return dns.Serve(ctx) })
-			eg.Go(func() error { return api.Serve(ctx) })
-
-			return eg.Wait()
+			return ery.Run(ctx)
 		},
 	}
 

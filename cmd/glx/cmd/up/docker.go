@@ -23,7 +23,7 @@ import (
 	"golang.org/x/sync/errgroup"
 
 	"github.com/srvc/glx"
-	api_pb "github.com/srvc/glx/api"
+	ery_pb "github.com/srvc/glx/api/ery"
 	"github.com/srvc/glx/pkg/util/prefixer"
 )
 
@@ -45,7 +45,7 @@ type DockerRunnerFactory struct {
 	docker  *client.Client
 }
 
-func (f *DockerRunnerFactory) GetRunner(app *glx.App, appPb *api_pb.App) Runner {
+func (f *DockerRunnerFactory) GetRunner(app *glx.App, appPb *ery_pb.App) Runner {
 	return &DockerRunner{
 		DockerRunnerFactory: f,
 		app:                 app,
@@ -61,7 +61,7 @@ func (f *DockerRunnerFactory) GetRunner(app *glx.App, appPb *api_pb.App) Runner 
 type DockerRunner struct {
 	*DockerRunnerFactory
 	app   *glx.App
-	appPb *api_pb.App
+	appPb *ery_pb.App
 	log   *zap.Logger
 }
 
@@ -235,11 +235,11 @@ func (r *DockerRunner) createContainer(ctx context.Context, imageTag string, mou
 	}
 	nwCfg := &network.NetworkingConfig{}
 	for _, p := range r.appPb.GetPorts() {
-		ePort := nat.Port(fmt.Sprintf("%d/%s", p.GetExposedPort(), strings.ToLower(p.GetNetwork().String())))
+		ePort := nat.Port(fmt.Sprintf("%d/%s", p.GetRequestedPort(), strings.ToLower(p.GetNetwork().String())))
 		cfg.ExposedPorts[ePort] = struct{}{}
 		hostCfg.PortBindings[ePort] = append(hostCfg.PortBindings[ePort], nat.PortBinding{
 			HostIP:   r.appPb.GetIp(),
-			HostPort: fmt.Sprintf("%d/%s", p.GetExposedPort(), strings.ToLower(p.GetNetwork().String())),
+			HostPort: fmt.Sprintf("%d/%s", p.GetRequestedPort(), strings.ToLower(p.GetNetwork().String())),
 		})
 	}
 	resp, err := r.docker.ContainerCreate(ctx, cfg, hostCfg, nwCfg, r.app.Hostname)

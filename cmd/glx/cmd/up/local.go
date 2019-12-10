@@ -11,7 +11,7 @@ import (
 	"go.uber.org/zap"
 
 	"github.com/srvc/glx"
-	api_pb "github.com/srvc/glx/api"
+	ery_pb "github.com/srvc/glx/api/ery"
 	"github.com/srvc/glx/pkg/util/prefixer"
 )
 
@@ -31,7 +31,7 @@ type LocalRunnerFactory struct {
 	log     *zap.Logger
 }
 
-func (f *LocalRunnerFactory) GetRunner(app *glx.App, appPb *api_pb.App) Runner {
+func (f *LocalRunnerFactory) GetRunner(app *glx.App, appPb *ery_pb.App) Runner {
 	return &LocalRunner{
 		LocalRunnerFactory: f,
 		app:                app,
@@ -47,7 +47,7 @@ func (f *LocalRunnerFactory) GetRunner(app *glx.App, appPb *api_pb.App) Runner {
 type LocalRunner struct {
 	*LocalRunnerFactory
 	app   *glx.App
-	appPb *api_pb.App
+	appPb *ery_pb.App
 	log   *zap.Logger
 }
 
@@ -55,10 +55,13 @@ func (r *LocalRunner) Run(ctx context.Context) error {
 	cmd := execx.CommandContext(ctx, r.app.Local.Cmd[0], r.app.Local.Cmd[1:]...)
 	cmd.Dir = filepath.Join(r.rootDir, r.app.Local.Path)
 	cmd.Env = os.Environ()
-	for _, port := range r.appPb.Ports {
-		if port.Env != "" {
-			cmd.Env = append(cmd.Env, fmt.Sprintf("%s=%d", port.Env, port.InternalPort))
-		}
+
+	portMap := make(map[uint32]uint32, len(r.appPb.Ports))
+	for _, p := range r.appPb.Ports {
+		portMap[p.RequestedPort] = p.AssignedPort
+	}
+	for env, port := range r.app.Local.PortEnv {
+		cmd.Env = append(cmd.Env, fmt.Sprintf("%s=%d", env, portMap[uint32(port)]))
 	}
 	cmd.Stdin = r.io.In()
 	cmd.Stdout = prefixer.NewWriter(r.io.Out(), r.app.Name, "")
