@@ -7,6 +7,7 @@ package tools
 // tool dependencies
 import (
 	_ "github.com/golang/protobuf/protoc-gen-go"
+	_ "github.com/google/wire/cmd/wire"
 	_ "github.com/grpc-ecosystem/grpc-gateway/protoc-gen-grpc-gateway"
 	_ "github.com/grpc-ecosystem/grpc-gateway/protoc-gen-swagger"
 	_ "github.com/izumin5210/grapi/cmd/grapi"
@@ -21,6 +22,7 @@ import (
 //  go generate ./tools.go
 //
 //go:generate go build -v -o=./bin/protoc-gen-go github.com/golang/protobuf/protoc-gen-go
+//go:generate go build -v -o=./bin/wire github.com/google/wire/cmd/wire
 //go:generate go build -v -o=./bin/protoc-gen-grpc-gateway github.com/grpc-ecosystem/grpc-gateway/protoc-gen-grpc-gateway
 //go:generate go build -v -o=./bin/protoc-gen-swagger github.com/grpc-ecosystem/grpc-gateway/protoc-gen-swagger
 //go:generate go build -v -o=./bin/grapi github.com/izumin5210/grapi/cmd/grapi
