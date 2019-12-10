@@ -10,9 +10,9 @@ import (
 )
 
 type Manager interface {
-	Serve(context.Context) error
 	Add(context.Context, *ery_pb.App) error
 	Delete(ctx context.Context, appID string) error
+	Close() error
 }
 
 type managerImpl struct {
@@ -29,25 +29,8 @@ func NewManager(
 	return &managerImpl{
 		factory:       factory,
 		shutdownFuncs: map[string]context.CancelFunc{},
-		log:           zap.L().Named("proxy").Named("manager"),
+		log:           zap.L().Named("proxy"),
 	}
-}
-
-func (m *managerImpl) Serve(ctx context.Context) error {
-	<-ctx.Done()
-
-	m.mu.Lock()
-
-	for _, f := range m.shutdownFuncs {
-		f()
-	}
-
-	m.shutdownFuncs = map[string]context.CancelFunc{}
-	m.mu.Unlock()
-
-	m.wg.Wait()
-
-	return nil
 }
 
 func (m *managerImpl) Add(ctx context.Context, app *ery_pb.App) error {
@@ -94,6 +77,21 @@ func (m *managerImpl) Delete(ctx context.Context, appID string) error {
 		shutdown()
 		delete(m.shutdownFuncs, appID)
 	}
+
+	return nil
+}
+
+func (m *managerImpl) Close() error {
+	m.mu.Lock()
+	defer m.mu.Unlock()
+
+	for _, f := range m.shutdownFuncs {
+		f()
+	}
+
+	m.shutdownFuncs = map[string]context.CancelFunc{}
+
+	m.wg.Wait()
 
 	return nil
 }
