@@ -20,7 +20,7 @@ type App interface {
 }
 
 type appImpl struct {
-	sync.Mutex
+	sync.RWMutex
 	m        sync.Map
 	ipPool   local.IPPool
 	portPool local.PortPool
@@ -39,8 +39,8 @@ func NewApp(
 }
 
 func (r *appImpl) List(context.Context) ([]*ery_pb.App, error) {
-	r.Lock()
-	defer r.Unlock()
+	r.RLock()
+	defer r.RUnlock()
 
 	apps := []*ery_pb.App{}
 	r.m.Range(func(_, v interface{}) bool {
@@ -53,8 +53,8 @@ func (r *appImpl) List(context.Context) ([]*ery_pb.App, error) {
 }
 
 func (r *appImpl) Get(_ context.Context, id string) (*ery_pb.App, error) {
-	r.Lock()
-	defer r.Unlock()
+	r.RLock()
+	defer r.RUnlock()
 
 	v, ok := r.m.Load(id)
 	if !ok {
