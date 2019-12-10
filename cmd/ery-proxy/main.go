@@ -7,8 +7,7 @@ import (
 
 	"github.com/izumin5210/clig/pkg/clib"
 	"github.com/spf13/cobra"
-	"github.com/srvc/glx"
-	"github.com/srvc/glx/pkg/server/proxy"
+	"github.com/srvc/glx/pkg/proxy"
 	"go.uber.org/zap"
 )
 
@@ -27,12 +26,12 @@ func run() error {
 
 func newCommand(io clib.IO) *cobra.Command {
 	cfg := struct {
-		Src, Dest *glx.Addr
-		Network   glx.Network
+		Src, Dest string
+		Network   string
 	}{
-		Src:     &glx.Addr{Port: 80},
-		Dest:    &glx.Addr{Port: 8080},
-		Network: glx.NetworkTCP,
+		Src:     ":80",
+		Dest:    ":8080",
+		Network: "tcp",
 	}
 
 	cmd := &cobra.Command{
@@ -44,9 +43,14 @@ func newCommand(io clib.IO) *cobra.Command {
 			}
 
 			switch cfg.Network {
-			case glx.NetworkTCP:
-				server = proxy.NewTCPServer(cfg.Src, cfg.Dest)
-			case glx.NetworkUDP:
+			case "tcp":
+				var err error
+				server, err = proxy.NewTCPServer(cfg.Src, cfg.Dest)
+				if err != nil {
+					return fmt.Errorf("failed to create a server: %w", err)
+				}
+			case "udp":
+				return fmt.Errorf("unsupported network type: %s", cfg.Network)
 			default:
 				panic("unreachable")
 			}
@@ -60,9 +64,9 @@ func newCommand(io clib.IO) *cobra.Command {
 	cmd.SetIn(io.In())
 	clib.AddLoggingFlags(cmd)
 
-	cmd.Flags().Var(cfg.Src, "src-addr", "")
-	cmd.Flags().Var(cfg.Dest, "dest-addr", "")
-	cmd.Flags().Var(&cfg.Network, "network", "")
+	cmd.Flags().StringVar(&cfg.Src, "src-addr", "", "")
+	cmd.Flags().StringVar(&cfg.Dest, "dest-addr", "", "")
+	cmd.Flags().StringVar(&cfg.Network, "network", "", "")
 
 	return cmd
 }

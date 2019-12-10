@@ -11,9 +11,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/srvc/glx"
-	"github.com/srvc/glx/pkg/server/proxy"
-	netutil "github.com/srvc/glx/pkg/util/net"
+	"github.com/srvc/glx/pkg/proxy"
 )
 
 func TestTCPServer(t *testing.T) {
@@ -29,15 +27,23 @@ func TestTCPServer(t *testing.T) {
 	)
 	defer svr.Close()
 
-	port, err := netutil.GetFreePort()
+	lis, err := net.Listen("tcp", ":0")
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
+	err = lis.Close()
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	port := lis.Addr().(*net.TCPAddr).Port
 
-	proxy := proxy.NewTCPServer(
-		&glx.Addr{IP: net.ParseIP("127.0.0.1"), Port: glx.Port(port)},
-		&glx.Addr{IP: net.ParseIP("127.0.0.1"), Port: glx.Port(svr.Listener.Addr().(*net.TCPAddr).Port)},
+	proxy, err := proxy.NewTCPServer(
+		fmt.Sprintf("127.0.0.1:%d", port),
+		fmt.Sprintf("127.0.0.1:%d", svr.Listener.Addr().(*net.TCPAddr).Port),
 	)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
 
 	var wg sync.WaitGroup
 	defer wg.Wait()

@@ -7,29 +7,34 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/srvc/glx"
 	"go.uber.org/zap"
 )
 
-func NewTCPServer(src, dest *glx.Addr) *TCPServer {
-	return &TCPServer{
-		src:  src,
-		dest: dest,
-		log:  zap.L().Named("proxy").Named("tcp"),
+func NewTCPServer(src, dest string) (*TCPServer, error) {
+	srcAddr, err := net.ResolveTCPAddr("tcp", src)
+	if err != nil {
+		return nil, err
 	}
+
+	destAddr, err := net.ResolveTCPAddr("tcp", dest)
+	if err != nil {
+		return nil, err
+	}
+
+	return &TCPServer{
+		src:  srcAddr,
+		dest: destAddr,
+		log:  zap.L().Named("proxy").Named("tcp"),
+	}, nil
 }
 
 type TCPServer struct {
-	src, dest *glx.Addr
+	src, dest *net.TCPAddr
 	log       *zap.Logger
 }
 
 func (s *TCPServer) Serve(ctx context.Context) error {
-	addr, err := net.ResolveTCPAddr("tcp", s.src.String())
-	if err != nil {
-		return err
-	}
-	lis, err := net.ListenTCP("tcp", addr)
+	lis, err := net.ListenTCP("tcp", s.src)
 	if err != nil {
 		return err
 	}
@@ -87,12 +92,7 @@ func (s *TCPServer) handleConn(ctx context.Context, srcConn *net.TCPConn) {
 		}
 	}
 
-	destAddr, err := net.ResolveTCPAddr("tcp", s.dest.String())
-	if err != nil {
-		// TODO: handle error
-		return
-	}
-	destConn, err := net.DialTCP("tcp", nil, destAddr)
+	destConn, err := net.DialTCP("tcp", nil, s.dest)
 	if err != nil {
 		// TODO: handle error
 		return
