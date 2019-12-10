@@ -1,0 +1,209 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "app.proto",
+    "version": "version not set"
+  },
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/apps": {
+      "get": {
+        "operationId": "ListApps",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/eryListAppsResponse"
+            }
+          }
+        },
+        "tags": [
+          "AppService"
+        ]
+      },
+      "post": {
+        "operationId": "CreateApp",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/eryApp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/eryApp"
+            }
+          }
+        ],
+        "tags": [
+          "AppService"
+        ]
+      }
+    },
+    "/apps/{app.app_id}": {
+      "patch": {
+        "operationId": "UpdateApp",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/eryApp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "app.app_id",
+            "description": "Output only.",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/eryApp"
+            }
+          }
+        ],
+        "tags": [
+          "AppService"
+        ]
+      }
+    },
+    "/apps/{app_id}": {
+      "get": {
+        "operationId": "GetApp",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/eryApp"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "app_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "AppService"
+        ]
+      },
+      "delete": {
+        "operationId": "DeleteApp",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "properties": {}
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "app_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "AppService"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "AppPort": {
+      "type": "object",
+      "properties": {
+        "network": {
+          "$ref": "#/definitions/PortNetwork",
+          "description": "Required."
+        },
+        "requested_port": {
+          "type": "integer",
+          "format": "int64",
+          "description": "Required."
+        },
+        "assigned_port": {
+          "type": "integer",
+          "format": "int64",
+          "description": "Output only.",
+          "readOnly": true
+        }
+      }
+    },
+    "PortNetwork": {
+      "type": "string",
+      "enum": [
+        "TCP",
+        "UDP"
+      ],
+      "default": "TCP"
+    },
+    "eryApp": {
+      "type": "object",
+      "properties": {
+        "app_id": {
+          "type": "string",
+          "description": "Output only.",
+          "readOnly": true
+        },
+        "name": {
+          "type": "string",
+          "description": "Required."
+        },
+        "hostname": {
+          "type": "string",
+          "description": "Required."
+        },
+        "ip": {
+          "type": "string",
+          "description": "Output only.",
+          "readOnly": true
+        },
+        "ports": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AppPort"
+          },
+          "description": "Required."
+        }
+      }
+    },
+    "eryListAppsResponse": {
+      "type": "object",
+      "properties": {
+        "apps": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/eryApp"
+          }
+        }
+      }
+    }
+  }
+}
