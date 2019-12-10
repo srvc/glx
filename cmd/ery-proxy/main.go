@@ -7,6 +7,7 @@ import (
 
 	"github.com/izumin5210/clig/pkg/clib"
 	"github.com/spf13/cobra"
+	"github.com/srvc/appctx"
 	"github.com/srvc/glx/pkg/proxy"
 	"go.uber.org/zap"
 )
@@ -14,17 +15,19 @@ import (
 func main() {
 	defer clib.Close()
 
-	if err := run(); err != nil {
+	ctx := appctx.Global()
+
+	if err := run(ctx); err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
 	}
 }
 
-func run() error {
-	return newCommand(clib.Stdio()).Execute()
+func run(ctx context.Context) error {
+	return newCommand(ctx, clib.Stdio()).Execute()
 }
 
-func newCommand(io clib.IO) *cobra.Command {
+func newCommand(ctx context.Context, io clib.IO) *cobra.Command {
 	cfg := struct {
 		Src, Dest string
 		Network   string
@@ -55,7 +58,7 @@ func newCommand(io clib.IO) *cobra.Command {
 				panic("unreachable")
 			}
 
-			return server.Serve(context.Background())
+			return server.Serve(ctx)
 		},
 	}
 
