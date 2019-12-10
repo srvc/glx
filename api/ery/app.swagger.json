@@ -191,6 +191,11 @@
             "$ref": "#/definitions/AppPort"
           },
           "description": "Required."
+        },
+        "proxy_required": {
+          "type": "boolean",
+          "format": "boolean",
+          "description": "Optional."
         }
       }
     },

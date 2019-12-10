@@ -66,6 +66,9 @@ message App {
 
   // Required.
   repeated Port ports = 5;
+
+  // Optional.
+  bool proxy_required = 6;
 }
 
 message ListAppsRequest {
