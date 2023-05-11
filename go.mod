@@ -7,7 +7,7 @@ require (
 	github.com/bradleyjkemp/cupaloy v2.3.0+incompatible // indirect
 	github.com/containerd/containerd v1.2.8 // indirect
 	github.com/docker/cli v0.0.0-20190906153656-016a3232168d
-	github.com/docker/distribution v2.7.1+incompatible // indirect
+	github.com/docker/distribution v2.8.2+incompatible // indirect
 	github.com/docker/docker v0.7.3-0.20190823211223-71d35adb3fad
 	github.com/docker/go-connections v0.4.0
 	github.com/fatih/color v1.7.0
